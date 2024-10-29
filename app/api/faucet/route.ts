@@ -1,6 +1,8 @@
 import { createPublicClient, createWalletClient, http, parseEther } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
 
 const akaveChain = {
   id: 78963,
@@ -13,10 +15,10 @@ const akaveChain = {
   },
   rpcUrls: {
     default: {
-      http: ['https://node1-eu.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc']
+      http: ['https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc']
     },
     public: {
-      http: ['https://node1-eu.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc']
+      http: ['https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc']
     }
   }
 }
@@ -28,7 +30,7 @@ const publicClient = createPublicClient({
 
 export async function POST(request: Request) {
   try {
-    const { address } = await request.json()
+    const { address, email } = await request.json()
     
     if (!address) {
       return NextResponse.json({ error: 'Address is required' }, { status: 400 })
@@ -56,6 +58,16 @@ export async function POST(request: Request) {
       to: address,
       value: parseEther('10')
     })
+
+    // Store email if provided
+    if (email) {
+      const filePath = path.join(process.cwd(), 'emails.json')
+      const fileData = fs.readFileSync(filePath, 'utf8')
+      const emails = JSON.parse(fileData)
+
+      emails.push({ address, email })
+      fs.writeFileSync(filePath, JSON.stringify(emails, null, 2))
+    }
 
     return NextResponse.json({ hash })
   } catch (error) {
