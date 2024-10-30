@@ -12,29 +12,53 @@ export default function Home() {
     try {
       // @ts-ignore
       if (!window?.ethereum) throw new Error("Please install MetaMask");
-      // @ts-ignore
-      await window?.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x13473", // 78963 in decimal
-            chainName: "Akave Fuji",
-            nativeCurrency: {
-              name: "AKVF",
-              symbol: "AKVF",
-              decimals: 18,
-            },
-            rpcUrls: [
-              "https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc",
-            ],
-            blockExplorerUrls: ["https://explorer.akave.network"],
-          },
-        ],
-      });
-      toast.success("Akave added to MetaMask!");
+
+      try {
+        // First try to switch to the network if it exists
+        // @ts-ignore
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x13473' }], // 78963 in decimal
+        });
+        toast.success("Switched to Akave network!");
+      } catch (switchError: any) {
+        // If the network doesn't exist, add it
+        if (switchError.code === 4902) {
+          try {
+            // @ts-ignore
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: "0x13473", // 78963 in decimal
+                  chainName: "Akave Fuji",
+                  nativeCurrency: {
+                    name: "AKVF",
+                    symbol: "AKVF",
+                    decimals: 18,
+                  },
+                  rpcUrls: [
+                    "https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc",
+                  ],
+                  blockExplorerUrls: ["https://explorer.akave.network"],
+                },
+              ],
+            });
+            toast.success("Akave network added to MetaMask!");
+          } catch (addError) {
+            throw new Error("Failed to add Akave network.");
+          }
+        } else {
+          throw new Error("Failed to switch to Akave network.");
+        }
+      }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add Akave to MetaMask.");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to add/switch to Akave network.");
+      }
     }
   };
 
@@ -70,7 +94,15 @@ export default function Home() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[90vh] p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] overflow-y-hidden">
-      <Toaster />
+      <Toaster 
+        toastOptions={{
+          duration: 3000,
+        }}
+        containerStyle={{
+          top: 20,
+        }}
+        position="top-right"
+      />
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start ">
         <Image src="/logo.svg" alt="Akave" width={500} height={100} />
         <div className="flex flex-col gap-4 bg-[#010127] p-8 rounded-lg w-[500px]">
