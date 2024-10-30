@@ -18,7 +18,7 @@ export default function Home() {
         // @ts-ignore
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x13473' }], // 78963 in decimal
+          params: [{ chainId: '0x13473' }],
         });
         toast.success("Switched to Akave network!");
       } catch (switchError: any) {
@@ -93,7 +93,7 @@ export default function Home() {
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[90vh] p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] overflow-y-hidden">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[90vh] p-4 pb-20 gap-8 sm:p-20 sm:gap-16 font-[family-name:var(--font-geist-sans)] overflow-y-hidden">
       <Toaster 
         toastOptions={{
           duration: 3000,
@@ -103,9 +103,16 @@ export default function Home() {
         }}
         position="top-right"
       />
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start ">
-        <Image src="/logo.svg" alt="Akave" width={500} height={100} />
-        <div className="flex flex-col gap-4 bg-[#010127] p-8 rounded-lg w-[500px]">
+      <main className="flex flex-col gap-4 sm:gap-8 row-start-2 items-center w-full max-w-[500px]">
+        <Image 
+          src="/logo.svg" 
+          alt="Akave" 
+          width={500} 
+          height={100}
+          className="w-[280px] sm:w-[500px] h-auto"
+          priority
+        />
+        <div className="flex flex-col gap-4 bg-[#010127] p-4 sm:p-8 rounded-lg w-full">
           <div className="flex flex-col gap-2">
             <label htmlFor="address" className="text-white">
               Wallet Address *
@@ -123,7 +130,7 @@ export default function Home() {
             <input
               id="address"
               type="text"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black w-full"
               placeholder="Enter address..."
               onChange={(e) => setAddress(e.target.value)}
               required
@@ -141,15 +148,15 @@ export default function Home() {
             <input
               id="email"
               type="email"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black w-full"
               placeholder="Enter email..."
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
-          <div className="flex flex-row gap-4 w-full mt-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
             <button
-              className="flex-grow px-4 py-2 bg-[#B0E4FF] text-black font-medium rounded-md transition-colors"
+              className="flex-grow px-4 py-2 bg-[#B0E4FF] text-black font-medium rounded-md transition-colors disabled:opacity-50"
               onClick={() => faucet(address)}
               disabled={loading}
             >
@@ -161,7 +168,7 @@ export default function Home() {
             >
               <span className="flex flex-row gap-2 justify-center items-center">
                 <Image src="/fox.svg" alt="MetaMask" width={20} height={20} />
-                Add Akave to metamask
+                <span className="whitespace-nowrap">Add Akave to metamask</span>
               </span>
             </button>
           </div>
