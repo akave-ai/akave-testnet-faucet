@@ -40,7 +40,7 @@ export default function Home() {
                   rpcUrls: [
                     "https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc",
                   ],
-                  blockExplorerUrls: ["https://explorer.akave.network"],
+                  blockExplorerUrls: ["http://explorer.akave.ai"],
                 },
               ],
             });
