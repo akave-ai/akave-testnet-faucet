@@ -150,7 +150,6 @@ export default function Home() {
               }}
               required
             />
-
             {!isValid && address && (
               <div className="flex justify-center text-red-500 mt-2">
                 <FaExclamationCircle className="text-2xl mr-2" />
