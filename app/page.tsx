@@ -2,11 +2,20 @@
 import Image from "next/image";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { FaExclamationCircle } from 'react-icons/fa';
 
 export default function Home() {
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
+
+  // Validate Ethereum Address
+  const validateAddress = (input: string) => {
+    const isValid = /^0x[a-fA-F0-9]{40}$/.test(input);
+    setIsValid(isValid);
+    return isValid;
+  };
 
   const addToMetamask = async () => {
     try {
@@ -65,6 +74,8 @@ export default function Home() {
   const faucet = async (address: string) => {
     setLoading(true);
     try {
+      if (!validateAddress(address)) throw new Error('Invalid Ethereum address! Please enter a valid address starting with "0x".');
+
       const response = await fetch("/api/faucet", {
         method: "POST",
         body: JSON.stringify({
@@ -130,11 +141,22 @@ export default function Home() {
             <input
               id="address"
               type="text"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black w-full"
+              className={`${isValid || address === '' ? 'focus:ring-blue-500' : 'focus:ring-red-500'} px-4 py-2 border-gray-300 border rounded-md focus:outline-none focus:ring-2 text-black w-full`}
               placeholder="Enter address..."
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(e) => {
+                const input = e.target.value;
+                setAddress(input);
+                validateAddress(input);
+              }}
               required
             />
+
+            {!isValid && address && (
+              <div className="flex justify-center text-red-500 mt-2">
+                <FaExclamationCircle className="text-2xl mr-2" />
+                Invalid Ethereum address! Please enter a valid address starting with "0x".
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -158,7 +180,7 @@ export default function Home() {
             <button
               className="flex-grow px-4 py-2 bg-[#B0E4FF] text-black font-medium rounded-md transition-colors disabled:opacity-50"
               onClick={() => faucet(address)}
-              disabled={loading}
+              disabled={loading || !isValid}
             >
               {loading ? "Claiming..." : "Claim 10 AKVF"}
             </button>
