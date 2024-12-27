@@ -8,12 +8,20 @@ export default function Home() {
   const [address, setAddress] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
+  const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
 
   // Validate Ethereum Address
-  const validateAddress = (input: string) => {
+  const validateAddress = (input: string): boolean => {
     const isValid = /^0x[a-fA-F0-9]{40}$/.test(input);
-    setIsValid(isValid);
+    setIsValidAddress(isValid);
+    return isValid;
+  };
+
+  // Validate Email Address
+  const validateEmail = (email: string): boolean => {
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setIsValidEmail(isValid);
     return isValid;
   };
 
@@ -75,6 +83,10 @@ export default function Home() {
     setLoading(true);
     try {
       if (!validateAddress(address)) throw new Error('Invalid Ethereum address! Please enter a valid address starting with "0x".');
+
+      if(email){
+        if(!validateEmail(email)) throw new Error('Invalid Email address! Please enter a valid Email address.');
+      }
 
       const response = await fetch("/api/faucet", {
         method: "POST",
@@ -141,7 +153,7 @@ export default function Home() {
             <input
               id="address"
               type="text"
-              className={`${isValid || address === '' ? 'focus:ring-blue-500' : 'focus:ring-red-500'} px-4 py-2 border-gray-300 border rounded-md focus:outline-none focus:ring-2 text-black w-full`}
+              className={`${isValidAddress || address === '' ? 'focus:ring-blue-500' : 'focus:ring-red-500'} px-4 py-2 border-gray-300 border rounded-md focus:outline-none focus:ring-2 text-black w-full`}
               placeholder="Enter address..."
               onChange={(e) => {
                 const input = e.target.value;
@@ -150,7 +162,7 @@ export default function Home() {
               }}
               required
             />
-            {!isValid && address && (
+            {!isValidAddress && address && (
               <div className="flex justify-center text-red-500 mt-2">
                 <FaExclamationCircle className="text-2xl mr-2" />
                 Invalid Ethereum address! Please enter a valid address starting with "0x".
@@ -169,17 +181,28 @@ export default function Home() {
             <input
               id="email"
               type="email"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black w-full"
+              className={`${isValidEmail || email === '' ? 'focus:ring-blue-500' : 'focus:ring-red-500'} px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-black w-full`}
               placeholder="Enter email..."
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                const input = e.target.value;
+                setEmail(input);
+                validateEmail(input);
+                }
+              }
             />
+            {!isValidEmail && email && (
+              <div className="flex justify-center text-red-500 mt-2">
+                <FaExclamationCircle className="text-2xl mr-2" />
+                Invalid Email address! Please enter a valid email address.
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
             <button
               className="flex-grow px-4 py-2 bg-[#B0E4FF] text-black font-medium rounded-md transition-colors disabled:opacity-50"
               onClick={() => faucet(address)}
-              disabled={loading || !isValid}
+              disabled={loading || !isValidAddress}
             >
               {loading ? "Claiming..." : "Claim 10 AKVF"}
             </button>
