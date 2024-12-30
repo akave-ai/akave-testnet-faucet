@@ -3,7 +3,7 @@
 ![Project Logo](../akave-testnet-faucet/public/logo.svg)  
 
 ## **📚 Table of Contents**  
-1. [Overview](#📝 overview)  
+1. [Overview](#overview)  
 2. [Features](#features)  
 3. [Installation](#installation)  
 4. [Usage](#usage)  
@@ -13,7 +13,7 @@
 
 ---
 
-## **📝 Overview**
+## Overview
 AKAVE Testnet Faucet is a decentralized application (dApp) designed to provide developers and testers with AKAVE testnet tokens for experimenting, testing smart contracts, and interacting with the AKAVE blockchain ecosystem.
 
 This faucet simplifies the token distribution process with an intuitive, user-friendly interface, supporting Ethereum address validation, email verification, and seamless integration with MetaMask.
