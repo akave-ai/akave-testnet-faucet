@@ -1,6 +1,10 @@
+<p align="center">
 # **AKAVE Testnet Faucet**  
+</p>
 
-![Project Logo](./public/logo.png)  
+<p align="center">
+    <img width="200" src="./public/logo.png" alt="Material Bread logo">
+</p>  
 
 ## **📚 Table of Contents**  
 1. [Overview](#overview)  
