@@ -1,6 +1,6 @@
 # **AKAVE Testnet Faucet**  
 
-![Project Logo](../akave-testnet-faucet/public/logo.svg)  
+![Project Logo](../akave-testnet-faucet/public/logo.png)  
 
 ## **📚 Table of Contents**  
 1. [Overview](#overview)  
