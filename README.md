@@ -3,7 +3,7 @@
 ![Project Logo](../akave-testnet-faucet/public/logo.svg)  
 
 ## **📚 Table of Contents**  
-1. [Overview](#overview)  
+1. [Overview](#📝 overview)  
 2. [Features](#features)  
 3. [Installation](#installation)  
 4. [Usage](#usage)  
@@ -102,5 +102,3 @@ Please follow our [Contribution Guidelines](CONTRIBUTING.md).
 
 ## **📄 License**  
 This project is licensed under the **GNU General Public License**. See the [LICENSE](LICENSE) file for details.  
-
----
