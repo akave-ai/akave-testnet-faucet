@@ -55,7 +55,7 @@ To set up the project locally:
 
 ---
 
-## **🚀 Usage**  
+## Usage 
 - Claim AKVF test token.
 - Connect your wallet (e.g., MetaMask).  
 - Validate your Ethereum address and email input.  
