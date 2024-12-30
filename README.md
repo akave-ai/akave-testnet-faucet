@@ -1,9 +1,9 @@
-<p align="center">
-# **AKAVE Testnet Faucet**  
-</p>
+<h1 align="center">
+ AKAVE Testnet Faucet 
+</h1>
 
 <p align="center">
-    <img width="200" src="./public/logo.png" alt="Material Bread logo">
+    <img src="./public/logo.png" alt="Material Bread logo">
 </p>  
 
 ## **📚 Table of Contents**  
