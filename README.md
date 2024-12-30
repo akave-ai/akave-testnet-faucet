@@ -8,7 +8,7 @@
 3. [Installation](#installation)  
 4. [Usage](#usage)  
 5. [Contributing](#contributing)  
-6. [Development](#development)  
+6. [Development](#👩‍💻development)  
 7. [License](#license)    
 
 ---
@@ -22,7 +22,7 @@ Whether you're building dApps, testing transactions, or exploring the AKAVE netw
 
 ---
 
-## **✨ Features**  
+## Features 
 Highlight the key features of your project:  
 - ✅ Claim AKVF Test tokens
 - ✅ Ethereum Address Validation  
@@ -31,7 +31,7 @@ Highlight the key features of your project:
 
 ---
 
-## **🛠️ Installation**  
+## Installation 
 To set up the project locally:  
 
 1. **Clone the Repository:**  
@@ -64,7 +64,7 @@ To set up the project locally:
 
 ---
 
-## **🤝 Contributing**  
+## Contributing  
 We welcome contributions! Follow these steps:  
 
 1. **Fork the repository**  
@@ -91,7 +91,7 @@ Please follow our [Contribution Guidelines](CONTRIBUTING.md).
 
 ---
 
-## **👩‍💻 Development**  
+## 👩‍💻Development
 **Scripts:**  
 - `npm run dev` → Start development server  
 - `npm run build` → Build the project for production  
@@ -100,5 +100,5 @@ Please follow our [Contribution Guidelines](CONTRIBUTING.md).
 
 ---
 
-## **📄 License**  
+## 📄 License
 This project is licensed under the **GNU General Public License**. See the [LICENSE](LICENSE) file for details.  
