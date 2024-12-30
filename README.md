@@ -8,7 +8,7 @@
 3. [Installation](#installation)  
 4. [Usage](#usage)  
 5. [Contributing](#contributing)  
-6. [Development](#👩‍💻development)  
+6. [👩‍💻 Development](#development)  
 7. [License](#license)    
 
 ---
@@ -91,7 +91,7 @@ Please follow our [Contribution Guidelines](CONTRIBUTING.md).
 
 ---
 
-## 👩‍💻Development
+## 👩‍💻 Development
 **Scripts:**  
 - `npm run dev` → Start development server  
 - `npm run build` → Build the project for production  
