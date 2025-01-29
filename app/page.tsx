@@ -121,11 +121,12 @@ export default function Home() {
               You can only claim if you have less than 10 AKVF. For bulk
               requests, please reach out to us at{" "}
               <a
-                href="mailto:contact@akave.network"
+                href="https://t.me/akavebuilders"
                 className="underline hover:text-gray-200"
               >
-                contact@akave.ai
+                Akave Builders
               </a>
+              {" "}telegram channel
             </p>
             <input
               id="address"
