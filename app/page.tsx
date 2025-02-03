@@ -18,7 +18,7 @@ export default function Home() {
         // @ts-ignore
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x13473' }],
+          params: [{ chainId: '0x13474' }],
         });
         toast.success("Switched to Akave network!");
       } catch (switchError: any) {
@@ -30,15 +30,15 @@ export default function Home() {
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId: "0x13473", // 78963 in decimal
+                  chainId: "0x13474", // 78964 in decimal
                   chainName: "Akave Fuji",
                   nativeCurrency: {
-                    name: "AKVF",
-                    symbol: "AKVF",
+                    name: "AKVT",
+                    symbol: "AKVT",
                     decimals: 18,
                   },
                   rpcUrls: [
-                    "https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc",
+                    "https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc",
                   ],
                   blockExplorerUrls: ["http://explorer.akave.ai"],
                 },
@@ -76,7 +76,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to claim AKVF.");
+        throw new Error(data.error || "Failed to claim AKVT.");
       }
 
       toast.success("Claim successful!");
@@ -118,14 +118,15 @@ export default function Home() {
               Wallet Address *
             </label>
             <p className="text-sm text-gray-400 mb-2">
-              You can only claim if you have less than 10 AKVF. For bulk
+              You can only claim if you have less than 10 AKVT. For bulk
               requests, please reach out to us at{" "}
               <a
-                href="mailto:contact@akave.network"
+                href="https://t.me/akavebuilders"
                 className="underline hover:text-gray-200"
               >
-                contact@akave.ai
+                Akave Builders
               </a>
+              {" "}telegram channel
             </p>
             <input
               id="address"
@@ -160,7 +161,7 @@ export default function Home() {
               onClick={() => faucet(address)}
               disabled={loading}
             >
-              {loading ? "Claiming..." : "Claim 10 AKVF"}
+              {loading ? "Claiming..." : "Claim 10 AKVT"}
             </button>
             <button
               onClick={addToMetamask}
