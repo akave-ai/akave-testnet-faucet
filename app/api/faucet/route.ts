@@ -5,7 +5,7 @@ import fs from 'fs'
 import path from 'path'
 
 const akaveChain = {
-  id: 78963,
+  id: 78964,
   name: 'Akave Fuji',
   network: 'akave',
   nativeCurrency: {
@@ -15,10 +15,10 @@ const akaveChain = {
   },
   rpcUrls: {
     default: {
-      http: ['https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc']
+      http: ['https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc']
     },
     public: {
-      http: ['https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc']
+      http: ['https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc']
     }
   }
 }

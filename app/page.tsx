@@ -18,7 +18,7 @@ export default function Home() {
         // @ts-ignore
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x13473' }],
+          params: [{ chainId: '0x13474' }],
         });
         toast.success("Switched to Akave network!");
       } catch (switchError: any) {
@@ -30,7 +30,7 @@ export default function Home() {
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId: "0x13473", // 78963 in decimal
+                  chainId: "0x13474", // 78964 in decimal
                   chainName: "Akave Fuji",
                   nativeCurrency: {
                     name: "AKVF",
@@ -38,7 +38,7 @@ export default function Home() {
                     decimals: 18,
                   },
                   rpcUrls: [
-                    "https://node1-asia.ava.akave.ai/ext/bc/tLqcnkJkZ1DgyLyWmborZK9d7NmMj6YCzCFmf9d9oQEd2fHon/rpc",
+                    "https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc",
                   ],
                   blockExplorerUrls: ["http://explorer.akave.ai"],
                 },
