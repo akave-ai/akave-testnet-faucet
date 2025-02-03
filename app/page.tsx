@@ -33,8 +33,8 @@ export default function Home() {
                   chainId: "0x13474", // 78964 in decimal
                   chainName: "Akave Fuji",
                   nativeCurrency: {
-                    name: "AKVF",
-                    symbol: "AKVF",
+                    name: "AKVT",
+                    symbol: "AKVT",
                     decimals: 18,
                   },
                   rpcUrls: [
@@ -76,7 +76,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to claim AKVF.");
+        throw new Error(data.error || "Failed to claim AKVT.");
       }
 
       toast.success("Claim successful!");
@@ -118,7 +118,7 @@ export default function Home() {
               Wallet Address *
             </label>
             <p className="text-sm text-gray-400 mb-2">
-              You can only claim if you have less than 10 AKVF. For bulk
+              You can only claim if you have less than 10 AKVT. For bulk
               requests, please reach out to us at{" "}
               <a
                 href="https://t.me/akavebuilders"
@@ -161,7 +161,7 @@ export default function Home() {
               onClick={() => faucet(address)}
               disabled={loading}
             >
-              {loading ? "Claiming..." : "Claim 10 AKVF"}
+              {loading ? "Claiming..." : "Claim 10 AKVT"}
             </button>
             <button
               onClick={addToMetamask}

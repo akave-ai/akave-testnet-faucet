@@ -9,8 +9,8 @@ const akaveChain = {
   name: 'Akave Fuji',
   network: 'akave',
   nativeCurrency: {
-    name: 'AKVF',
-    symbol: 'AKVF',
+    name: 'AKVT',
+    symbol: 'AKVT',
     decimals: 18
   },
   rpcUrls: {
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     
     if (balance >= parseEther('10')) {
       return NextResponse.json(
-        { error: 'Address already has more than 10 AKVF' },
+        { error: 'Address already has more than 10 AKVT' },
         { status: 400 }
       )
     }
