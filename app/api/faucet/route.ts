@@ -11,52 +11,53 @@ const akaveChain = {
   nativeCurrency: {
     name: 'AKVT',
     symbol: 'AKVT',
-    decimals: 18
+    decimals: 18,
   },
   rpcUrls: {
     default: {
-      http: ['https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc']
+      http: [
+        'https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc',
+      ],
     },
     public: {
-      http: ['https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc']
-    }
-  }
+      http: [
+        'https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc',
+      ],
+    },
+  },
 }
 
 const publicClient = createPublicClient({
   chain: akaveChain,
-  transport: http()
+  transport: http(),
 })
 
 export async function POST(request: Request) {
   try {
     const { address, email } = await request.json()
-    
+
     if (!address) {
       return NextResponse.json({ error: 'Address is required' }, { status: 400 })
     }
 
     // Check user's balance
     const balance = await publicClient.getBalance({ address })
-    
+
     if (balance >= parseEther('10')) {
-      return NextResponse.json(
-        { error: 'Address already has more than 10 AKVT' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Address already has more than 10 AKVT' }, { status: 400 })
     }
 
     const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`)
     const walletClient = createWalletClient({
       account,
       chain: akaveChain,
-      transport: http()
+      transport: http(),
     })
 
     // Send transaction
     const hash = await walletClient.sendTransaction({
       to: address,
-      value: parseEther('10')
+      value: parseEther('10'),
     })
 
     // Store email if provided
@@ -72,9 +73,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ hash })
   } catch (error) {
     console.error(error)
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to process request' }, { status: 500 })
   }
 }
