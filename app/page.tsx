@@ -1,17 +1,24 @@
-"use client";
-import Image from "next/image";
-import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+'use client'
+import Image from 'next/image'
+import { useState, useRef, useEffect } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export default function Home() {
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [address, setAddress] = useState('')
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const recaptchaRef = useRef<ReCAPTCHA>(null)
+
+  useEffect(() => {
+    // Log if the site key exists (without exposing the actual key)
+    console.log('reCAPTCHA site key exists:', !!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)
+  }, [])
 
   const addToMetamask = async () => {
     try {
       // @ts-ignore
-      if (!window?.ethereum) throw new Error("Please install MetaMask");
+      if (!window?.ethereum) throw new Error('Please install MetaMask')
 
       try {
         // First try to switch to the network if it exists
@@ -19,8 +26,8 @@ export default function Home() {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: '0x13474' }],
-        });
-        toast.success("Switched to Akave network!");
+        })
+        toast.success('Switched to Akave network!')
       } catch (switchError: any) {
         // If the network doesn't exist, add it
         if (switchError.code === 4902) {
@@ -30,71 +37,84 @@ export default function Home() {
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId: "0x13474", // 78964 in decimal
-                  chainName: "Akave Fuji",
+                  chainId: '0x13474', // 78964 in decimal
+                  chainName: 'Akave Fuji',
                   nativeCurrency: {
-                    name: "AKVT",
-                    symbol: "AKVT",
+                    name: 'AKVT',
+                    symbol: 'AKVT',
                     decimals: 18,
                   },
                   rpcUrls: [
-                    "https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc",
+                    'https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc',
                   ],
-                  blockExplorerUrls: ["http://explorer.akave.ai"],
+                  blockExplorerUrls: ['http://explorer.akave.ai'],
                 },
               ],
-            });
-            toast.success("Akave network added to MetaMask!");
+            })
+            toast.success('Akave network added to MetaMask!')
           } catch (addError) {
-            throw new Error("Failed to add Akave network.");
+            throw new Error('Failed to add Akave network.')
           }
         } else {
-          throw new Error("Failed to switch to Akave network.");
+          throw new Error('Failed to switch to Akave network.')
         }
       }
     } catch (error) {
-      console.error(error);
+      console.error(error)
       if (error instanceof Error) {
-        toast.error(error.message);
+        toast.error(error.message)
       } else {
-        toast.error("Failed to add/switch to Akave network.");
+        toast.error('Failed to add/switch to Akave network.')
       }
     }
-  };
+  }
 
   const faucet = async (address: string) => {
-    setLoading(true);
+    if (!recaptchaRef.current) {
+      toast.error('Please complete the reCAPTCHA verification')
+      return
+    }
+
+    const token = recaptchaRef.current.getValue()
+    if (!token) {
+      toast.error('Please complete the reCAPTCHA verification')
+      return
+    }
+
+    setLoading(true)
     try {
-      const response = await fetch("/api/faucet", {
-        method: "POST",
+      const response = await fetch('/api/faucet', {
+        method: 'POST',
         body: JSON.stringify({
           address: address,
           email: email,
+          recaptchaToken: token,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to claim AKVT.");
+        throw new Error(data.error || 'Failed to claim AKVT.')
       }
 
-      toast.success("Claim successful!");
+      toast.success('Claim successful!')
+      recaptchaRef.current.reset()
     } catch (error) {
-      console.error(error);
+      console.error(error)
       if (error instanceof Error) {
-        toast.error(error.message || "An error occurred.");
+        toast.error(error.message || 'An error occurred.')
       } else {
-        toast.error("An error occurred.");
+        toast.error('An error occurred.')
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[90vh] p-4 pb-20 gap-8 sm:p-20 sm:gap-16 font-[family-name:var(--font-geist-sans)] overflow-y-hidden">
-      <Toaster 
+    <div className="grid min-h-[90vh] grid-rows-[20px_1fr_20px] items-center justify-items-center gap-8 overflow-y-hidden p-4 pb-20 font-[family-name:var(--font-geist-sans)] sm:gap-16 sm:p-20">
+      <Toaster
         toastOptions={{
           duration: 3000,
         }}
@@ -103,35 +123,32 @@ export default function Home() {
         }}
         position="top-right"
       />
-      <main className="flex flex-col gap-4 sm:gap-8 row-start-2 items-center w-full max-w-[500px]">
-        <Image 
-          src="/logo.svg" 
-          alt="Akave" 
-          width={500} 
+      <main className="row-start-2 flex w-full max-w-[500px] flex-col items-center gap-4 sm:gap-8">
+        <Image
+          src="/logo.svg"
+          alt="Akave"
+          width={500}
           height={100}
-          className="w-[280px] sm:w-[500px] h-auto"
+          className="h-auto w-[280px] sm:w-[500px]"
           priority
         />
-        <div className="flex flex-col gap-4 bg-[#010127] p-4 sm:p-8 rounded-lg w-full">
+        <div className="flex w-full flex-col gap-4 rounded-lg bg-[#010127] p-4 sm:p-8">
           <div className="flex flex-col gap-2">
             <label htmlFor="address" className="text-white">
               Wallet Address *
             </label>
-            <p className="text-sm text-gray-400 mb-2">
-              You can only claim if you have less than 10 AKVT. For bulk
-              requests, please reach out to us at{" "}
-              <a
-                href="https://t.me/akavebuilders"
-                className="underline hover:text-gray-200"
-              >
+            <p className="mb-2 text-sm text-gray-400">
+              You can only claim if you have less than 10 AKVT. For bulk requests, please reach out
+              to us at{' '}
+              <a href="https://t.me/akavebuilders" className="underline hover:text-gray-200">
                 Akave Builders
-              </a>
-              {" "}telegram channel
+              </a>{' '}
+              telegram channel
             </p>
             <input
               id="address"
               type="text"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black w-full"
+              className="w-full rounded-md border border-gray-300 px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter address..."
               onChange={(e) => setAddress(e.target.value)}
               required
@@ -142,32 +159,43 @@ export default function Home() {
             <label htmlFor="email" className="text-white">
               Email (optional)
             </label>
-            <p className="text-sm text-gray-400 mb-2">
-              Leave your email ID to receive updates about network developments
-              and announcements
+            <p className="mb-2 text-sm text-gray-400">
+              Leave your email ID to receive updates about network developments and announcements
             </p>
             <input
               id="email"
               type="email"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black w-full"
+              className="w-full rounded-md border border-gray-300 px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter email..."
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
+          <div className="my-4 flex justify-center">
+            {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                theme="dark"
+              />
+            ) : (
+              <div className="text-red-500">reCAPTCHA site key is not configured</div>
+            )}
+          </div>
+
+          <div className="mt-4 flex w-full flex-col gap-4 sm:flex-row">
             <button
-              className="flex-grow px-4 py-2 bg-[#B0E4FF] text-black font-medium rounded-md transition-colors disabled:opacity-50"
+              className="flex-grow rounded-md bg-[#B0E4FF] px-4 py-2 font-medium text-black transition-colors disabled:opacity-50"
               onClick={() => faucet(address)}
               disabled={loading}
             >
-              {loading ? "Claiming..." : "Claim 10 AKVT"}
+              {loading ? 'Claiming...' : 'Claim 10 AKVT'}
             </button>
             <button
               onClick={addToMetamask}
-              className="flex-grow px-4 py-2 bg-[#B0E4FF] text-black font-medium rounded-md transition-colors"
+              className="flex-grow rounded-md bg-[#B0E4FF] px-4 py-2 font-medium text-black transition-colors"
             >
-              <span className="flex flex-row gap-2 justify-center items-center">
+              <span className="flex flex-row items-center justify-center gap-2">
                 <Image src="/fox.svg" alt="MetaMask" width={20} height={20} />
                 <span className="whitespace-nowrap">Add Akave to metamask</span>
               </span>
@@ -176,5 +204,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-  );
+  )
 }
