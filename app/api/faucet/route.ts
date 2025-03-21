@@ -20,6 +20,12 @@ const akaveChain = {
     public: {
       http: ['https://n1-us.akave.ai/ext/bc/2JMWNmZbYvWcJRPPy1siaDBZaDGTDAaqXoY5UBKh4YrhNFzEce/rpc']
     }
+  },
+  blockExplorers: {
+    default: {
+      name: 'Akave Explorer',
+      url: 'https://explorer.akave.ai'
+    }
   }
 }
 
