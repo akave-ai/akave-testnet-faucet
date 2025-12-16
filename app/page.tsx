@@ -22,8 +22,8 @@ export default function Home() {
   };
 
   const networkInfo = {
-    chainId: "21207",
-    chainIdHex: "0x52d7",
+    chainId: "21213",
+    chainIdHex: "0x52dd",
     chainName: "Akave Community Testnet",
     currency: {
       name: "AKVT",

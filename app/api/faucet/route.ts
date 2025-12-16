@@ -17,7 +17,7 @@ const getRpcUrl = () => {
 const rpcUrl = getRpcUrl();
 
 const akaveChain = {
-  id: 21207,
+  id: 21213,
   name: "Akave Community Testnet",
   network: "akave",
   nativeCurrency: {
