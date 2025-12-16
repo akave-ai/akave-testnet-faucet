@@ -1,80 +1,97 @@
-import { createPublicClient, createWalletClient, http, parseEther } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
-import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { createPublicClient, createWalletClient, http, parseEther } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+
+const getRpcUrl = () => {
+  const rpcUrl = process.env.RPC_URL || process.env.AKAVE_RPC_URL;
+  if (!rpcUrl) {
+    throw new Error(
+      "RPC_URL or AKAVE_RPC_URL environment variable is required"
+    );
+  }
+  return rpcUrl;
+};
+
+const rpcUrl = getRpcUrl();
 
 const akaveChain = {
   id: 21207,
-  name: 'Akave Community Testnet',
-  network: 'akave',
+  name: "Akave Community Testnet",
+  network: "akave",
   nativeCurrency: {
-    name: 'AKVT',
-    symbol: 'AKVT',
-    decimals: 18
+    name: "AKVT",
+    symbol: "AKVT",
+    decimals: 18,
   },
   rpcUrls: {
     default: {
-      http: ['https://c1-us.akave.ai/ext/bc/239eAqXjawEJyEbr1GhDUoYWZdyBA3b7NeDc6Hozw3sn3xXm9H/rpc']
+      http: [rpcUrl],
     },
     public: {
-      http: ['https://c1-us.akave.ai/ext/bc/239eAqXjawEJyEbr1GhDUoYWZdyBA3b7NeDc6Hozw3sn3xXm9H/rpc']
-    }
-  }
-}
+      http: [rpcUrl],
+    },
+  },
+};
 
 const publicClient = createPublicClient({
   chain: akaveChain,
-  transport: http()
-})
+  transport: http(),
+});
 
 export async function POST(request: Request) {
   try {
-    const { address, email } = await request.json()
-    
+    const { address, email } = await request.json();
+
     if (!address) {
-      return NextResponse.json({ error: 'Address is required' }, { status: 400 })
+      return NextResponse.json(
+        { error: "Address is required" },
+        { status: 400 }
+      );
     }
 
     // Check user's balance
-    const balance = await publicClient.getBalance({ address })
-    
-    if (balance >= parseEther('10')) {
+    const balance = await publicClient.getBalance({ address });
+
+    if (balance >= parseEther("10")) {
       return NextResponse.json(
-        { error: 'Address already has more than 10 AKVT' },
+        { error: "Address already has more than 10 AKVT" },
         { status: 400 }
-      )
+      );
     }
 
-    const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`)
+    const account = privateKeyToAccount(
+      process.env.PRIVATE_KEY as `0x${string}`
+    );
     const walletClient = createWalletClient({
       account,
       chain: akaveChain,
-      transport: http()
-    })
+      transport: http(),
+    });
 
     // Send transaction
     const hash = await walletClient.sendTransaction({
       to: address,
-      value: parseEther('10')
-    })
+      value: parseEther("10"),
+    });
 
     // Store email if provided
     if (email) {
-      const filePath = path.join(process.cwd(), 'emails.json')
-      const fileData = fs.readFileSync(filePath, 'utf8')
-      const emails = JSON.parse(fileData)
+      const filePath = path.join(process.cwd(), "emails.json");
+      const fileData = fs.readFileSync(filePath, "utf8");
+      const emails = JSON.parse(fileData);
 
-      emails.push({ address, email })
-      fs.writeFileSync(filePath, JSON.stringify(emails, null, 2))
+      emails.push({ address, email });
+      fs.writeFileSync(filePath, JSON.stringify(emails, null, 2));
     }
 
-    return NextResponse.json({ hash })
+    return NextResponse.json({ hash });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return NextResponse.json(
-      { error: 'Failed to process request' },
+      { error: "Failed to process request" },
       { status: 500 }
-    )
+    );
   }
 }

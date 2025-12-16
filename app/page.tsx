@@ -10,6 +10,17 @@ export default function Home() {
   const [isNetworkInfoExpanded, setIsNetworkInfoExpanded] = useState(false);
   const networkSectionRef = useRef<HTMLDivElement>(null);
 
+  const getRpcUrl = () => {
+    const rpcUrl =
+      process.env.NEXT_PUBLIC_RPC_URL || process.env.NEXT_PUBLIC_AKAVE_RPC_URL;
+    if (!rpcUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_RPC_URL or NEXT_PUBLIC_AKAVE_RPC_URL environment variable is required"
+      );
+    }
+    return rpcUrl;
+  };
+
   const networkInfo = {
     chainId: "21207",
     chainIdHex: "0x52d7",
@@ -19,8 +30,7 @@ export default function Home() {
       symbol: "AKVT",
       decimals: "18",
     },
-    rpcUrl:
-      "https://c1-us.akave.ai/ext/bc/239eAqXjawEJyEbr1GhDUoYWZdyBA3b7NeDc6Hozw3sn3xXm9H/rpc",
+    rpcUrl: getRpcUrl(),
     explorerUrl: "https://explorer.akave.ai",
   };
 
@@ -94,9 +104,7 @@ export default function Home() {
                     symbol: "AKVT",
                     decimals: 18,
                   },
-                  rpcUrls: [
-                    "https://c1-us.akave.ai/ext/bc/239eAqXjawEJyEbr1GhDUoYWZdyBA3b7NeDc6Hozw3sn3xXm9H/rpc",
-                  ],
+                  rpcUrls: [networkInfo.rpcUrl],
                   blockExplorerUrls: ["https://explorer.akave.ai"],
                 },
               ],
